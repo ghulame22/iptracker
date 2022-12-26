@@ -21,22 +21,22 @@ function App() {
   //     '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   // }).addTo(map);
 
-  useEffect(() => {
-    axios
-      .get(
-        `https://geo.ipify.org/api/v2/country,city?apiKey=at_G03eHaVZQz5f2aV4i4evRNSDRcxHo&ipAddress=${click}`
-      )
-      .then((res) => {
-        console.log(res);
-        setId(res.data.ip);
-        setLocation({City:res.data.location.city, State:res.data.location.country, zip:res.data.location.postalCode});
-        setTimezone(res.data.location.timezone);
-        setIsp(res.data.isp);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [click]);
+  // useEffect(() => {
+  //   axios
+  //     .get(
+  //       `https://geo.ipify.org/api/v2/country,city?apiKey=at_G03eHaVZQz5f2aV4i4evRNSDRcxHo&ipAddress=${click}`
+  //     )
+  //     .then((res) => {
+  //       console.log(res);
+  //       setId(res.data.ip);
+  //       setLocation({City:res.data.location.city, State:res.data.location.country, zip:res.data.location.postalCode});
+  //       setTimezone(res.data.location.timezone);
+  //       setIsp(res.data.isp);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, [click]);
 
   return (
     <>
