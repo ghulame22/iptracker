@@ -1,42 +1,25 @@
 import "./App.css";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 function App() {
+  const [api, setApi] = useState({});
   const [data, setData] = useState("");
-  const [click, setClick] = useState("")
-  const [id, setId] = useState('');
-  const [location, setLocation] = useState({City:"", State:"", zip:""});
-  const [timezone, setTimezone] = useState('');
-  const [isp, setIsp] = useState('');
 
   const handleClick = () => {
-      setClick(data);
-      console.log("raju");
-  }
-  // var map = L.map("map").setView([51.505, -0.09], 13);
-  // L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  //   maxZoom: 19,
-  //   attribution:
-  //     '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-  // }).addTo(map);
-
-  useEffect(() => {
     axios
       .get(
-        `https://geo.ipify.org/api/v2/country,city?apiKey=at_G03eHaVZQz5f2aV4i4evRNSDRcxHo&ipAddress=${click}`
+        `https://geo.ipify.org/api/v2/country,city?apiKey=at_G03eHaVZQz5f2aV4i4evRNSDRcxHo&ipAddress=${data}`
       )
       .then((res) => {
+        setApi(res.data);
         console.log(res);
-        setId(res.data.ip);
-        setLocation({City:res.data.location.city, State:res.data.location.country, zip:res.data.location.postalCode});
-        setTimezone(res.data.location.timezone);
-        setIsp(res.data.isp);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [click]);
+  };
 
   return (
     <>
@@ -48,7 +31,7 @@ function App() {
             type="text"
             placeholder="Search for any IP address or domain"
             value={data}
-            onChange={e => setData(e.target.value)}
+            onChange={(e) => setData(e.target.value)}
           />
           <button className="btn" type="button" onClick={handleClick}>
             <svg xmlns="http://www.w3.org/2000/svg" width="11" height="14">
@@ -65,34 +48,45 @@ function App() {
           <div className="component">
             <span>IP ADDRESS</span>
             <div className="detailedOutput">
-              <span>
-                {id}
-              </span>
+              <span>{api?.ip}</span>
             </div>
           </div>
           <div className="component">
             <span>LOCATION</span>
             <div className="detailedOutput">
-              <span>{location.City} {location.State} {location.zip}</span>
+              <span>
+                {api?.location?.city} {api?.location?.country}{" "}
+                {api?.location?.postalCode}
+              </span>
             </div>
           </div>
           <div className="component">
             <span>TIMEZONE</span>
             <div className="detailedOutput">
-              <span>{timezone}</span>
+              <span>{api?.location?.timezone}</span>
             </div>
           </div>
           <div className="component">
             <span>ISP</span>
             <div className="detailedOutput">
-              <span>{isp}</span>
+              <span>{api?.isp}</span>
             </div>
           </div>
         </div>
       </div>
-      <div>
-        {/* <div id="map"></div> */}
-      </div>
+      <MapContainer
+        center={[19.899094091155916, 75.27630960064279]}
+        zoom={10}
+        scrollWheelZoom={true}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Marker position={[19.899094091155916, 75.27630960064279]}>
+          <Popup>{api?.ip}</Popup>
+        </Marker>
+      </MapContainer>
     </>
   );
 }
