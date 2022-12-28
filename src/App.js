@@ -3,9 +3,11 @@ import axios from "axios";
 import { useState, useRef } from "react";
 import {
   MapContainer,
-  TileLayer
+  Marker,
+  TileLayer,
+  Popup
 } from "react-leaflet";
-import LocationMarker from "./LocationMarker";
+// import LocationMarker from "./LocationMarker";
 
 
 function App() {
@@ -94,10 +96,10 @@ function App() {
         </div>
       </div>
       <MapContainer
-        // center={[19.899094091155916, 75.27630960064279]}
+        center={[19.899094091155916, 75.27630960064279]}
         ref={mapRef}
         // center={defaultCenter}
-        center={{ lat: 51.505, lng: -0.09 }}
+        // center={{ lat: 51.505, lng: -0.09 }}
         zoom={10}
         scrollWheelZoom={true}
       >
@@ -105,8 +107,8 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <LocationMarker />
-        {/* <Marker
+        {/* <LocationMarker/> */}
+        <Marker
           position={[
             api?.location?.lat || 19.899094091155916,
             api?.location?.lng || 75.27630960064279,
@@ -114,7 +116,7 @@ function App() {
           animate
         >
           <Popup>{api?.ip}</Popup>
-        </Marker> */}
+        </Marker>
       </MapContainer>
     </>
   );
