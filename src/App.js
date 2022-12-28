@@ -1,11 +1,18 @@
 import "./App.css";
 import axios from "axios";
-import { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { useState, useRef } from "react";
+import {
+  MapContainer,
+  TileLayer
+} from "react-leaflet";
+import LocationMarker from "./LocationMarker";
+
 
 function App() {
   const [api, setApi] = useState({});
   const [data, setData] = useState("");
+
+  const mapRef = useRef();
 
   const handleClick = () => {
     axios
@@ -19,7 +26,19 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+    // const { current = {} } = mapRef;
+    // const { leafletElement: MapContainer } = current;
+    // console.log("Here is current", current);
+    // useMapEvents.setView([lato,lngo], 14);
+    // MapContainer.flyTo([lato,lngo], 14);
   };
+  // const lat = 19.899094091155916;
+  // const lng = 75.27630960064279;
+  // const defaultCenter = [lat,lng];
+  // const lato = api?.location?.lat ;
+  // const lngo = api?.location?.lng ;
+  // console.log(lat);
+  // console.log(lng);
 
   return (
     <>
@@ -66,7 +85,7 @@ function App() {
               <span>{api?.location?.timezone}</span>
             </div>
           </div>
-          <div className="component">
+          <div className="component" id="lastComponent">
             <span>ISP</span>
             <div className="detailedOutput">
               <span>{api?.isp}</span>
@@ -75,7 +94,10 @@ function App() {
         </div>
       </div>
       <MapContainer
-        center={[19.899094091155916, 75.27630960064279]}
+        // center={[19.899094091155916, 75.27630960064279]}
+        ref={mapRef}
+        // center={defaultCenter}
+        center={{ lat: 51.505, lng: -0.09 }}
         zoom={10}
         scrollWheelZoom={true}
       >
@@ -83,9 +105,16 @@ function App() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={[19.899094091155916, 75.27630960064279]}>
+        <LocationMarker />
+        {/* <Marker
+          position={[
+            api?.location?.lat || 19.899094091155916,
+            api?.location?.lng || 75.27630960064279,
+          ]}
+          animate
+        >
           <Popup>{api?.ip}</Popup>
-        </Marker>
+        </Marker> */}
       </MapContainer>
     </>
   );
